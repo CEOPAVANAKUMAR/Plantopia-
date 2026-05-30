@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Plantopia — Grow Your World</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#C9A84C;--gold-l:#E8C96A;--gold-d:#8B6914;--gold-f:rgba(201,168,76,.08);
+  --dk:#080B0D;--dk2:#0F1316;--dk3:#161B1F;--dk4:#1C2227;--dk5:#222930;
+  --tx:#EDE9E0;--tx2:#B8B3A8;--tx3:#7A766E;
+  --gr:#1E4A18;--gr2:#2D6B25;--gr3:#3D8A33;
+  --wa:#25D366;--wa2:#1aab52;
+  --red:#C0392B;--blue:#1a6bbf;
+  --r:6px;--rs:3px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--dk);color:var(--tx);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.65;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dk2)}::-webkit-scrollbar-thumb{background:rgba(201,168,76,.22);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.018;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ═══ NAV ═══ */
+nav{position:fixed;top:0;width:100%;z-index:500;height:66px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 2.4rem;background:rgba(8,11,13,.96);
+  backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.13)}
+.nlogo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.norb{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#3D8A33,#1E4A18);
+  border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;
+  font-size:14px;box-shadow:0 0 16px rgba(201,168,76,.22)}
+.nbrand{font-family:'Cormorant Garamond',serif;font-size:1.52rem;font-weight:600;
+  color:var(--gold);letter-spacing:.18em;text-transform:uppercase}
+.nlinks{display:flex;gap:2rem;list-style:none}
+.nlinks a{color:var(--tx2);text-decoration:none;font-size:.76rem;letter-spacing:.12em;
+  text-transform:uppercase;transition:color .22s;font-weight:400;cursor:pointer}
+.nlinks a:hover{color:var(--gold)}
+.nright{display:flex;align-items:center;gap:.9rem}
+.nwa{display:inline-flex;align-items:center;gap:.45rem;background:var(--wa);color:#fff;
+  padding:.38rem 1rem;border-radius:var(--rs);font-size:.72rem;letter-spacing:.07em;
+  text-transform:uppercase;font-weight:500;text-decoration:none;transition:all .22s;white-space:nowrap}
+.nwa:hover{background:var(--wa2);transform:translateY(-1px)}
+.nwa svg{width:13px;height:13px;fill:#fff;flex-shrink:0}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.ham span{width:21px;height:1.5px;background:var(--tx2);transition:all .3s;display:block}
+.mob{display:none;position:fixed;top:66px;left:0;right:0;z-index:499;
+  background:var(--dk2);border-bottom:1px solid rgba(201,168,76,.1);padding:.9rem 1.4rem}
+.mob.on{display:block}
+.mob li{list-style:none;margin-bottom:.7rem}
+.mob a{color:var(--tx2);text-decoration:none;font-size:.88rem;letter-spacing:.08em;text-transform:uppercase;transition:color .2s;cursor:pointer}
+.mob a:hover{color:var(--gold)}
+
+/* ═══ TICKER ═══ */
+.ticker{background:var(--gr2);padding:.38rem 0;overflow:hidden;
+  border-bottom:1px solid rgba(201,168,76,.15);margin-top:66px}
+.ticker-t{display:flex;gap:4rem;white-space:nowrap;
+  animation:tick 32s linear infinite;font-size:.7rem;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,.9);font-weight:400}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ HERO ═══ */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:5rem 2rem 4rem;position:relative;overflow:hidden}
+.hbg{position:absolute;inset:0;background:radial-gradient(ellipse 75% 55% at 50% 42%,rgba(30,74,24,.18) 0%,transparent 68%);pointer-events:none}
+.hring{position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,.06);
+  top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:rp 8s ease-in-out infinite}
+.hring:nth-child(2){width:600px;height:600px;animation-delay:0s}
+.hring:nth-child(3){width:900px;height:900px;animation-delay:2.5s;opacity:.5}
+.hring:nth-child(4){width:1200px;height:1200px;animation-delay:5s;opacity:.28}
+#pts{position:absolute;inset:0;pointer-events:none}
+.pt{position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;
+  opacity:0;animation:ptf var(--d,8s) var(--dl,0s) ease-in-out infinite}
+@keyframes ptf{0%,100%{opacity:0;transform:translateY(0)}30%,70%{opacity:.6}50%{opacity:1;transform:translateY(-50px)}}
+@keyframes rp{0%,100%{opacity:.45}50%{opacity:1}}
+
+.hi{position:relative;z-index:1}
+.hpill{display:inline-flex;align-items:center;gap:.5rem;
+  border:1px solid rgba(201,168,76,.34);padding:.32rem 1.1rem;border-radius:20px;
+  font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:2rem;animation:fu .65s ease both}
+.hdot{width:5px;height:5px;background:var(--gold);border-radius:50%;animation:bl 2s ease-in-out infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.15}}
+
+.lwrap{margin-bottom:2rem;animation:fu .75s .08s ease both}
+.lmain{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,11vw,8.5rem);
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;line-height:.95;
+  background:linear-gradient(145deg,#7A5A10 0%,#C9A84C 28%,#F2DC82 50%,#C9A84C 72%,#7A5A10 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lorb{display:inline-flex;align-items:center;justify-content:center;
+  width:.8em;height:.8em;border-radius:50%;
+  background:linear-gradient(140deg,#163912,#1E4A18,#2D6B25,#3D8A33);
+  border:2.5px solid var(--gold);vertical-align:middle;margin:0 .02em;position:relative;top:-.06em;
+  box-shadow:0 0 24px rgba(201,168,76,.3),inset 0 0 10px rgba(0,0,0,.3)}
+.lleaf{font-size:.42em;-webkit-text-fill-color:initial;background:none;color:#7de070}
+.ltag{font-family:'Cormorant Garamond',serif;font-size:clamp(.9rem,1.8vw,1.18rem);
+  letter-spacing:.55em;text-transform:uppercase;color:var(--gold);font-style:italic;
+  margin-top:.55rem;display:flex;align-items:center;justify-content:center;gap:1.1rem}
+.ltag::before,.ltag::after{content:'';flex:1;height:1px;max-width:110px}
+.ltag::before{background:linear-gradient(to right,transparent,var(--gold))}
+.ltag::after{background:linear-gradient(to left,transparent,var(--gold))}
+
+.hh1{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4.5vw,3.2rem);
+  font-weight:300;font-style:italic;line-height:1.22;margin-bottom:1.1rem;
+  animation:fu .9s .16s ease both;color:var(--tx)}
+.hh1 em{color:var(--gold)}
+.hp{font-size:.94rem;color:var(--tx2);max-width:480px;margin:0 auto 2.8rem;
+  animation:fu .9s .22s ease both;line-height:1.88}
+.hbtns{display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap;animation:fu .9s .28s ease both}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.8rem 2.1rem;
+  font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;border-radius:var(--rs);cursor:pointer;text-decoration:none;
+  transition:all .26s;border:none;white-space:nowrap}
+.btn-g{background:var(--gold);color:var(--dk)}
+.btn-g:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:0 10px 28px rgba(201,168,76,.28)}
+.btn-gh{background:transparent;border:1px solid rgba(201,168,76,.42);color:var(--gold)}
+.btn-gh:hover{background:var(--gold-f);transform:translateY(-2px)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-wa:hover{background:var(--wa2);transform:translateY(-2px);box-shadow:0 10px 26px rgba(37,211,102,.28)}
+.btn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0}
+
+.htrust{display:flex;gap:2.4rem;justify-content:center;margin-top:3.4rem;
+  animation:fu .9s .35s ease both;flex-wrap:wrap}
+.titem{display:flex;align-items:center;gap:.52rem;font-size:.73rem;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--tx3)}
+.tico{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,.28);
+  display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--gold-f)}
+@keyframes fu{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ DIVIDER ═══ */
+.div{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+/* ═══ SECTIONS ═══ */
+.sec{padding:5.5rem 2rem}
+.stag{font-size:.68rem;letter-spacing:.33em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:.75rem;font-weight:400}
+.stit{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.8vw,2.8rem);
+  font-weight:400;color:var(--tx);line-height:1.15}
+.stit em{color:var(--gold);font-style:italic}
+.shead{text-align:center;margin-bottom:3.4rem}
+
+/* ═══ CATEGORIES ═══ */
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;max-width:1060px;margin:0 auto}
+.cc{background:var(--dk3);border:1px solid rgba(201,168,76,.11);border-radius:var(--r);
+  padding:2.2rem 1.2rem;text-align:center;cursor:pointer;transition:all .32s;
+  text-decoration:none;color:inherit;display:block;position:relative;overflow:hidden}
+.cc::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.07),transparent 68%);
+  opacity:0;transition:opacity .32s}
+.cc:hover{border-color:rgba(201,168,76,.44);transform:translateY(-5px);
+  box-shadow:0 18px 40px rgba(0,0,0,.36)}
+.cc:hover::after{opacity:1}
+.cem{font-size:2.4rem;margin-bottom:.9rem;display:block}
+.cnm{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--tx);letter-spacing:.05em}
+.cct{font-size:.7rem;color:var(--tx3);letter-spacing:.07em;margin-top:.28rem}
+
+/* ═══ SHOP / FILTER ═══ */
+.fw{display:flex;gap:.55rem;justify-content:center;flex-wrap:wrap;
+  margin-bottom:2.8rem;max-width:1060px;margin-left:auto;margin-right:auto}
+.fb{background:transparent;border:1px solid rgba(201,168,76,.18);color:var(--tx2);
+  padding:.38rem 1.1rem;font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;
+  cursor:pointer;font-family:'DM Sans',sans-serif;border-radius:var(--rs);transition:all .22s;font-weight:400}
+.fb:hover,.fb.on{border-color:var(--gold);color:var(--gold);background:var(--gold-f)}
+
+/* ═══ PRODUCT GRID ═══ */
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;max-width:1060px;margin:0 auto}
+.pc{background:var(--dk3);border:1px solid rgba(201,168,76,.09);border-radius:var(--r);
+  overflow:hidden;transition:all .36s;position:relative}
+.pc:hover{border-color:rgba(201,168,76,.38);transform:translateY(-7px);
+  box-shadow:0 24px 50px rgba(0,0,0,.46)}
+.pi{height:228px;position:relative;overflow:hidden;background:var(--dk4);
+  display:flex;align-items:center;justify-content:center}
+.pi img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;display:block}
+.pc:hover .pi img{transform:scale(1.07)}
+.pie{font-size:5.2rem;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))}
+.pglow{position:absolute;inset:0;background:radial-gradient(circle at 50% 90%,rgba(45,107,37,.28),transparent 60%);pointer-events:none}
+.pb{position:absolute;top:10px;left:10px;z-index:3;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;padding:.28rem .7rem;border-radius:var(--rs);font-weight:500;color:#fff}
+.b1{background:var(--gr3)}.b2{background:var(--blue)}.b3{background:#7d2020}.b4{background:var(--gold-d);color:var(--dk)}
+.pinfo{padding:1.4rem}
+.pnm{font-family:'Cormorant Garamond',serif;font-size:1.18rem;color:var(--tx);margin-bottom:.4rem;line-height:1.2}
+.pdesc{font-size:.79rem;color:var(--tx2);line-height:1.65;margin-bottom:1.1rem;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pft{display:flex;align-items:center;justify-content:space-between;gap:.55rem}
+.ppr{display:flex;flex-direction:column}
+.pprm{font-size:1.1rem;font-weight:500;color:var(--gold);line-height:1}
+.ppro{font-size:.7rem;color:var(--tx3);text-decoration:line-through;margin-top:.13rem}
+.pprc{font-size:.66rem;color:var(--tx3);margin-top:.13rem;letter-spacing:.04em}
+.bwo{display:inline-flex;align-items:center;gap:.38rem;background:var(--wa);color:#fff;
+  padding:.42rem .95rem;border-radius:var(--rs);font-size:.68rem;letter-spacing:.07em;
+  text-transform:uppercase;font-weight:500;text-decoration:none;transition:all .22s;
+  border:none;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.bwo:hover{background:var(--wa2);transform:translateY(-2px);box-shadow:0 5px 18px rgba(37,211,102,.3)}
+.bwo svg{width:12px;height:12px;fill:#fff;flex-shrink:0}
+
+/* ═══ EMPTY STATE ═══ */
+.empty{grid-column:1/-1;text-align:center;padding:4.5rem;color:var(--tx3)}
+.eico{font-size:3rem;margin-bottom:.9rem;opacity:.3}
+
+/* ═══ PROMISE ═══ */
+.promise{background:var(--dk2);text-align:center;position:relative;overflow:hidden}
+.promise::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 52% 72% at 50% 50%,rgba(30,74,24,.14),transparent);pointer-events:none}
+.prmi{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.prmbdg{width:76px;height:76px;border-radius:50%;border:1.5px solid var(--gold);
+  margin:0 auto 1.8rem;display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;background:rgba(201,168,76,.08)}
+.prmh{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,2.8rem);
+  font-weight:400;margin-bottom:1.2rem;line-height:1.22}
+.prmh strong{color:var(--gold)}
+.prmp{color:var(--tx2);font-size:.9rem;line-height:1.88;margin-bottom:2.5rem}
+.cl{display:flex;gap:1.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.ci{display:flex;align-items:center;gap:.6rem;font-size:.8rem;color:var(--tx2)}
+.cico{width:20px;height:20px;border-radius:50%;background:rgba(61,138,51,.18);
+  border:1px solid var(--gr3);display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--gr3);flex-shrink:0}
+
+/* ═══ FOOTER ═══ */
+footer{background:var(--dk2);border-top:1px solid rgba(201,168,76,.12);padding:3.8rem 2rem 1.8rem}
+.fg{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.8rem;max-width:1060px;margin:0 auto 2.4rem}
+.fbn{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;
+  letter-spacing:.13em;color:var(--gold);text-transform:uppercase}
+.fbp{color:var(--tx2);font-size:.8rem;line-height:1.88;margin-top:.85rem;max-width:260px}
+.fbwa{display:inline-flex;align-items:center;gap:.45rem;margin-top:1.1rem;
+  background:var(--wa);color:#fff;padding:.4rem 1rem;border-radius:var(--rs);
+  font-size:.73rem;font-weight:500;text-decoration:none;transition:all .22s}
+.fbwa:hover{background:var(--wa2)}
+.fbwa svg{width:12px;height:12px;fill:#fff}
+.fc h4{font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.1rem;font-weight:500}
+.fc ul{list-style:none}
+.fc li{margin-bottom:.52rem}
+.fc a{color:var(--tx2);text-decoration:none;font-size:.8rem;transition:color .22s;cursor:pointer}
+.fc a:hover{color:var(--gold)}
+.fb2{border-top:1px solid rgba(201,168,76,.08);padding-top:1.7rem;
+  max-width:1060px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:.9rem}
+.fcp{color:var(--tx3);font-size:.7rem;letter-spacing:.05em}
+.atrig{color:rgba(201,168,76,.25);font-size:.66rem;cursor:pointer;
+  letter-spacing:.07em;background:none;border:none;font-family:inherit;transition:color .25s}
+.atrig:hover{color:var(--gold)}
+
+/* ═══ WA FLOAT BUTTON ═══ */
+.waf{position:fixed;bottom:1.8rem;right:1.8rem;z-index:490;width:54px;height:54px;
+  border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 22px rgba(37,211,102,.42);text-decoration:none;transition:all .28s;
+  animation:wa 0.6s .5s ease both}
+.waf:hover{transform:scale(1.14);box-shadow:0 8px 30px rgba(37,211,102,.5)}
+.waf svg{width:27px;height:27px;fill:#fff}
+@keyframes wa{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+/* ═══ TOAST ═══ */
+#tst{position:fixed;bottom:5.5rem;right:1.8rem;z-index:9000;padding:.68rem 1.35rem;
+  border-radius:var(--rs);font-size:.8rem;font-weight:500;pointer-events:none;
+  opacity:0;transform:translateY(14px);transition:all .32s;letter-spacing:.04em;max-width:280px}
+#tst.on{opacity:1;transform:translateY(0)}
+#tst.ok{background:var(--gr3);color:#fff}
+#tst.er{background:var(--red);color:#fff}
+#tst.in{background:var(--dk4);color:var(--gold);border:1px solid rgba(201,168,76,.28)}
+
+/* ═══════════════════ ADMIN ═══════════════════ */
+#aov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.9);
+  backdrop-filter:blur(12px);overflow-y:auto;padding:1.6rem 1rem}
+#aov.on{display:flex;align-items:flex-start;justify-content:center}
+.abox{background:var(--dk2);border:1px solid rgba(201,168,76,.24);border-radius:var(--r);
+  width:100%;max-width:940px;padding:2.2rem;position:relative}
+.ahd{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:2rem;padding-bottom:1.4rem;border-bottom:1px solid rgba(201,168,76,.12)}
+.atit{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--gold);letter-spacing:.09em}
+.ax{background:transparent;border:1px solid rgba(255,255,255,.14);color:var(--tx2);
+  width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.05rem;
+  transition:all .22s;display:flex;align-items:center;justify-content:center}
+.ax:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Login */
+#alog{display:block;text-align:center;padding:2.5rem 0}
+.alico{font-size:2.8rem;margin-bottom:.8rem}
+.alh{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);margin-bottom:.35rem;letter-spacing:.06em}
+.alp{color:var(--tx2);font-size:.8rem;margin-bottom:1.8rem}
+.ainp{width:100%;max-width:300px;background:var(--dk3);border:1px solid rgba(201,168,76,.22);
+  color:var(--tx);padding:.68rem .95rem;font-family:'DM Sans',sans-serif;font-size:.88rem;
+  border-radius:var(--rs);outline:none;transition:border-color .22s;display:block;margin:0 auto}
+.ainp:focus{border-color:var(--gold)}
+.aerr{color:var(--red);font-size:.75rem;margin-top:.5rem;min-height:1em}
+.abtn{background:var(--gold);color:var(--dk);padding:.7rem 2rem;font-family:'DM Sans',sans-serif;
+  font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;border:none;
+  cursor:pointer;border-radius:var(--rs);transition:all .22s;margin-top:1rem}
+.abtn:hover{background:var(--gold-l)}
+.abtn.sm{padding:.42rem 1.1rem;font-size:.7rem;margin-top:0}
+.abtn.gh{background:transparent;border:1px solid rgba(201,168,76,.28);color:var(--gold)}
+.abtn.gh:hover{background:var(--gold-f)}
+.abtn.rd{background:transparent;border:1px solid rgba(192,57,43,.38);color:var(--red)}
+.abtn.rd:hover{background:rgba(192,57,43,.1)}
+
+/* Dashboard */
+#adsh{display:none}
+.atabs{display:flex;border:1px solid rgba(201,168,76,.18);border-radius:var(--rs);overflow:hidden;margin-bottom:2rem}
+.atab{flex:1;padding:.65rem .75rem;background:transparent;border:none;color:var(--tx2);
+  font-family:'DM Sans',sans-serif;font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;
+  cursor:pointer;transition:all .22s;border-right:1px solid rgba(201,168,76,.18)}
+.atab:last-child{border-right:none}
+.atab.on{background:rgba(201,168,76,.12);color:var(--gold)}
+.apane{display:none}
+.apane.on{display:block}
+
+/* Form */
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.1rem}
+.ffu{grid-column:1/-1}
+.fgg{display:flex;flex-direction:column;gap:.38rem}
+.flb{font-size:.66rem;letter-spacing:.19em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.fi{background:var(--dk3);border:1px solid rgba(201,168,76,.2);color:var(--tx);
+  padding:.62rem .9rem;font-family:'DM Sans',sans-serif;font-size:.86rem;
+  border-radius:var(--rs);outline:none;transition:border-color .22s;width:100%}
+.fi:focus{border-color:var(--gold)}
+select.fi{cursor:pointer}
+select.fi option{background:var(--dk3)}
+textarea.fi{resize:vertical;min-height:78px}
+
+/* Image drop */
+.idrop{border:2px dashed rgba(201,168,76,.22);border-radius:var(--r);padding:1.8rem;
+  text-align:center;cursor:pointer;transition:all .28s;position:relative;background:var(--dk3)}
+.idrop:hover,.idrop.drag{border-color:var(--gold);background:var(--gold-f)}
+.idrop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.idrop-ico{font-size:2rem;margin-bottom:.55rem;opacity:.55}
+.idrop p{font-size:.78rem;color:var(--tx2)}
+.idrop p span{color:var(--gold);text-decoration:underline;cursor:pointer}
+.idrop-hint{font-size:.67rem;color:var(--tx3);margin-top:.3rem}
+.ipvs{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.9rem}
+.ith{width:80px;height:80px;border-radius:var(--rs);overflow:hidden;
+  border:1px solid rgba(201,168,76,.22);position:relative;flex-shrink:0}
+.ith img{width:100%;height:100%;object-fit:cover}
+.ithd{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(0,0,0,.75);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-size:9px;color:#fff;border:none;transition:background .2s}
+.ithd:hover{background:var(--red)}
+.ithm{position:absolute;bottom:3px;left:3px;background:rgba(201,168,76,.9);
+  color:var(--dk);font-size:.52rem;padding:1px 5px;border-radius:2px;font-weight:600}
+
+/* Plant list */
+.pll{display:flex;flex-direction:column;gap:.65rem;max-height:430px;overflow-y:auto;padding-right:.35rem}
+.pll::-webkit-scrollbar{width:3px}
+.pll::-webkit-scrollbar-thumb{background:rgba(201,168,76,.22);border-radius:2px}
+.pli{background:var(--dk3);border:1px solid rgba(201,168,76,.09);border-radius:var(--rs);
+  padding:.88rem 1.1rem;display:flex;align-items:center;gap:.88rem;transition:border-color .22s}
+.pli:hover{border-color:rgba(201,168,76,.28)}
+.plth{width:46px;height:46px;border-radius:var(--rs);overflow:hidden;flex-shrink:0;
+  background:var(--dk4);display:flex;align-items:center;justify-content:center;font-size:1.45rem}
+.plth img{width:100%;height:100%;object-fit:cover}
+.plinf{flex:1;min-width:0}
+.plinm{font-family:'Cormorant Garamond',serif;font-size:.97rem;color:var(--tx);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plmt{font-size:.69rem;color:var(--tx3);margin-top:.1rem}
+.plpr{font-size:.92rem;font-weight:500;color:var(--gold);flex-shrink:0}
+.plac{display:flex;gap:.4rem;flex-shrink:0}
+
+/* Settings */
+.sc{background:var(--dk3);border:1px solid rgba(201,168,76,.11);border-radius:var(--r);
+  padding:1.4rem;margin-bottom:1.1rem}
+.sc h3{font-family:'Cormorant Garamond',serif;font-size:1.07rem;color:var(--gold);
+  margin-bottom:1rem;letter-spacing:.05em}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:880px){
+  .cg{grid-template-columns:repeat(2,1fr)}
+  .pg{grid-template-columns:repeat(2,1fr)}
+  .fg{grid-template-columns:1fr}
+  .fg2{grid-template-columns:1fr}
+  .ffu{grid-column:1}
+}
+@media(max-width:600px){
+  nav{padding:0 1.1rem}
+  .nlinks{display:none}
+  .ham{display:flex}
+  .pg{grid-template-columns:1fr}
+  .htrust{gap:1.1rem}
+  .abox{padding:1.4rem}
+  .atabs{flex-wrap:wrap}
+  .atab{flex:none;flex-basis:50%}
+  .lmain{font-size:clamp(3.2rem,14vw,5rem)}
+}
+@media(max-width:400px){
+  .cg{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div id="tst"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nlogo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <div class="norb">🌿</div>
+    <span class="nbrand">Plantopia</span>
+  </div>
+  <ul class="nlinks">
+    <li><a href="#shop">Shop</a></li>
+    <li><a onclick="setF('Indoor');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Indoor</a></li>
+    <li><a onclick="setF('Outdoor');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Outdoor</a></li>
+    <li><a onclick="setF('Succulents');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Succulents</a></li>
+    <li><a onclick="setF('Flowering');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Flowering</a></li>
+  </ul>
+  <div class="nright">
+    <a class="nwa" id="nwa" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Order Now
+    </a>
+    <div class="ham" onclick="togMob()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<ul class="mob" id="mobm">
+  <li><a href="#shop" onclick="cMob()">Shop All</a></li>
+  <li><a onclick="setF('Indoor');document.getElementById('shop').scrollIntoView({behavior:'smooth'});cMob()">Indoor</a></li>
+  <li><a onclick="setF('Outdoor');document.getElementById('shop').scrollIntoView({behavior:'smooth'});cMob()">Outdoor</a></li>
+  <li><a onclick="setF('Succulents');document.getElementById('shop').scrollIntoView({behavior:'smooth'});cMob()">Succulents</a></li>
+  <li><a onclick="setF('Flowering');document.getElementById('shop').scrollIntoView({behavior:'smooth'});cMob()">Flowering</a></li>
+</ul>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker">
+  <div class="ticker-t">
+    <span>🌿 Fresh Plants Every Week</span>
+    <span>🚚 Free Delivery on ₹599+</span>
+    <span>🌱 30-Day Plant Promise</span>
+    <span>💬 WhatsApp to Order</span>
+    <span>🪴 Nursery Fresh Quality</span>
+    <span>📦 Pan India Delivery</span>
+    <span>🌸 New Arrivals In Stock</span>
+    <span>🌿 Fresh Plants Every Week</span>
+    <span>🚚 Free Delivery on ₹599+</span>
+    <span>🌱 30-Day Plant Promise</span>
+    <span>💬 WhatsApp to Order</span>
+    <span>🪴 Nursery Fresh Quality</span>
+    <span>📦 Pan India Delivery</span>
+    <span>🌸 New Arrivals In Stock</span>
+  </div>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="top">
+  <div class="hbg"></div>
+  <div class="hring"></div><div class="hring"></div><div class="hring"></div>
+  <div id="pts"></div>
+  <div class="hi">
+    <div class="hpill"><div class="hdot"></div> Fresh arrivals every week</div>
+    <div class="lwrap">
+      <div class="lmain">PLANT<span><span class="lorb"><span class="lleaf">🌱</span></span></span>PIA</div>
+      <div class="ltag">Grow Your World</div>
+    </div>
+    <h1 class="hh1">A little wilderness, <em>delivered to your door.</em></h1>
+    <p class="hp">Curated indoor plants, succulents &amp; flowering favourites — nursery fresh, delivered across India. WhatsApp us to order instantly!</p>
+    <div class="hbtns">
+      <a href="#shop" class="btn btn-g">Browse Plants</a>
+      <a href="#" class="btn btn-wa" id="hwa" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Order on WhatsApp
+      </a>
+      <a href="#categories" class="btn btn-gh">See Categories</a>
+    </div>
+    <div class="htrust">
+      <div class="titem"><div class="tico">🚚</div> Free delivery ₹599+</div>
+      <div class="titem"><div class="tico">🛡</div> 30-day guarantee</div>
+      <div class="titem"><div class="tico">📦</div> Pan India delivery</div>
+      <div class="titem"><div class="tico">🌿</div> Nursery fresh</div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- ═══ CATEGORIES ═══ -->
+<section class="sec" id="categories">
+  <div class="shead">
+    <div class="stag">Browse By Type</div>
+    <h2 class="stit">Shop by <em>category</em></h2>
+  </div>
+  <div class="cg">
+    <a class="cc" href="#shop" onclick="setF('Indoor')">
+      <span class="cem">🪴</span>
+      <div class="cnm">Indoor</div>
+      <div class="cct" id="ct-Indoor">— plants</div>
+    </a>
+    <a class="cc" href="#shop" onclick="setF('Outdoor')">
+      <span class="cem">🌳</span>
+      <div class="cnm">Outdoor</div>
+      <div class="cct" id="ct-Outdoor">— plants</div>
+    </a>
+    <a class="cc" href="#shop" onclick="setF('Succulents')">
+      <span class="cem">🌵</span>
+      <div class="cnm">Succulents</div>
+      <div class="cct" id="ct-Succulents">— plants</div>
+    </a>
+    <a class="cc" href="#shop" onclick="setF('Flowering')">
+      <span class="cem">🌸</span>
+      <div class="cnm">Flowering</div>
+      <div class="cct" id="ct-Flowering">— plants</div>
+    </a>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- ═══ SHOP ═══ -->
+<section class="sec" id="shop" style="background:var(--dk2)">
+  <div class="shead">
+    <div class="stag">Our Collection</div>
+    <h2 class="stit">Fresh <em>plants</em> — WhatsApp to order</h2>
+  </div>
+  <div class="fw" id="fw">
+    <button class="fb on" onclick="setF('All')">🌿 All Plants</button>
+    <button class="fb" onclick="setF('Indoor')">🪴 Indoor</button>
+    <button class="fb" onclick="setF('Outdoor')">🌳 Outdoor</button>
+    <button class="fb" onclick="setF('Succulents')">🌵 Succulents</button>
+    <button class="fb" onclick="setF('Flowering')">🌸 Flowering</button>
+  </div>
+  <div class="pg" id="pg"></div>
+</section>
+<div class="div"></div>
+
+<!-- ═══ PROMISE ═══ -->
+<section class="sec promise">
+  <div class="prmi">
+    <div class="prmbdg">🛡</div>
+    <h2 class="prmh">Healthy plants, or your<br><strong>money back</strong> — 30 days.</h2>
+    <p class="prmp">Every plant is hand-picked and packed with care for its journey to you. Not happy? Just WhatsApp us — we'll make it right, no questions asked. 🌿</p>
+    <div class="cl">
+      <div class="ci"><div class="cico">✓</div> Hand-picked quality</div>
+      <div class="ci"><div class="cico">✓</div> Expert packaging</div>
+      <div class="ci"><div class="cico">✓</div> 30-day guarantee</div>
+      <div class="ci"><div class="cico">✓</div> Free returns</div>
+    </div>
+    <a href="#shop" class="btn btn-g" style="margin-bottom:1rem">Browse All Plants</a>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="fg">
+    <div>
+      <div class="fbn">Plantopia</div>
+      <p class="fbp">Hand-picked plants delivered across India. Grown with care, shipped with love — bringing a little wilderness home.</p>
+      <a class="fbwa" id="fwa" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+    <div class="fc">
+      <h4>Shop</h4>
+      <ul>
+        <li><a onclick="setF('Indoor');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Indoor Plants</a></li>
+        <li><a onclick="setF('Outdoor');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Outdoor Plants</a></li>
+        <li><a onclick="setF('Succulents');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Succulents</a></li>
+        <li><a onclick="setF('Flowering');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Flowering Plants</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4>Help</h4>
+      <ul>
+        <li><a id="fwa2">WhatsApp Us</a></li>
+        <li><a>Plant Care Guide</a></li>
+        <li><a>Delivery Info</a></li>
+        <li><a>Return Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fb2">
+    <span class="fcp">© 2026 Plantopia · Made with 💚 in India</span>
+    <button class="atrig" onclick="openA()">⚙ Admin Panel</button>
+  </div>
+</footer>
+
+<!-- ═══ WA FLOAT ═══ -->
+<a class="waf" id="waf" href="#" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ═══ ADMIN OVERLAY ═══ -->
+<div id="aov">
+  <div class="abox">
+    <div class="ahd">
+      <div class="atit">🌿 Plantopia Admin</div>
+      <button class="ax" onclick="closeA()">✕</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="alog">
+      <div class="alico">🔐</div>
+      <div class="alh">Admin Login</div>
+      <p class="alp">Enter your password to manage the plant store</p>
+      <input class="ainp" type="password" id="apass" placeholder="Password"
+        onkeydown="if(event.key==='Enter')doLog()">
+      <div class="aerr" id="aerr"></div><br>
+      <button class="abtn" onclick="doLog()">Login →</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="adsh">
+      <div class="atabs">
+        <button class="atab on" onclick="gTab('add')">➕ Add Plant</button>
+        <button class="atab" onclick="gTab('manage')">📋 Manage</button>
+        <button class="atab" onclick="gTab('settings')">⚙ Settings</button>
+      </div>
+
+      <!-- ADD / EDIT PLANT -->
+      <div class="apane on" id="p-add">
+        <div class="fg2">
+          <div class="fgg">
+            <label class="flb">Plant Name *</label>
+            <input class="fi" id="fN" placeholder="e.g. Monstera Deliciosa">
+          </div>
+          <div class="fgg">
+            <label class="flb">Price ₹ *</label>
+            <input class="fi" type="number" id="fP" placeholder="e.g. 599" min="1">
+          </div>
+          <div class="fgg">
+            <label class="flb">Original Price ₹ (shown as strike-through)</label>
+            <input class="fi" type="number" id="fO" placeholder="e.g. 799 (optional)">
+          </div>
+          <div class="fgg">
+            <label class="flb">Category</label>
+            <select class="fi" id="fC">
+              <option value="Indoor">🪴 Indoor</option>
+              <option value="Outdoor">🌳 Outdoor</option>
+              <option value="Succulents">🌵 Succulents</option>
+              <option value="Flowering">🌸 Flowering</option>
+            </select>
+          </div>
+          <div class="fgg">
+            <label class="flb">Badge</label>
+            <select class="fi" id="fB">
+              <option value="Bestseller">🏆 Bestseller</option>
+              <option value="New Arrival">✨ New Arrival</option>
+              <option value="Limited">🔥 Limited</option>
+              <option value="Sale">🏷 Sale</option>
+              <option value="">No Badge</option>
+            </select>
+          </div>
+          <div class="fgg">
+            <label class="flb">Emoji (shown if no photo)</label>
+            <input class="fi" id="fE" placeholder="🌿" maxlength="4" value="🌿">
+          </div>
+          <div class="fgg ffu">
+            <label class="flb">Description</label>
+            <textarea class="fi" id="fD" placeholder="Care tips, light needs, size, ideal placement..."></textarea>
+          </div>
+          <!-- IMAGE UPLOAD -->
+          <div class="fgg ffu">
+            <label class="flb">📸 Plant Photos (up to 5 images)</label>
+            <div class="idrop" id="idr"
+              ondragover="dOv(event)" ondragleave="dLv(event)" ondrop="dDr(event)">
+              <input type="file" id="ifi" accept="image/*" multiple
+                onchange="handleFiles(this.files)">
+              <div class="idrop-ico">📷</div>
+              <p>Drag &amp; drop photos here, or <span onclick="document.getElementById('ifi').click()">click to browse</span></p>
+              <p class="idrop-hint">JPG · PNG · WEBP &nbsp;|&nbsp; Max 5MB each &nbsp;|&nbsp; Auto-compressed</p>
+            </div>
+            <div class="ipvs" id="ipvs"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-top:.5rem">
+          <button class="abtn" id="addB" onclick="savePlant()">Add Plant to Store</button>
+          <button class="abtn sm gh" onclick="clearF()">Clear Form</button>
+        </div>
+        <input type="hidden" id="eid">
+      </div>
+
+      <!-- MANAGE -->
+      <div class="apane" id="p-manage">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:.7rem">
+          <span id="plct" style="color:var(--tx2);font-size:.8rem"></span>
+          <button class="abtn sm rd" onclick="if(confirm('Delete ALL plants?'))clearAll()">🗑 Clear All</button>
+        </div>
+        <div class="pll" id="pll"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="apane" id="p-settings">
+        <div class="sc">
+          <h3>📱 WhatsApp Number</h3>
+          <div class="fgg" style="margin-bottom:.9rem;max-width:340px">
+            <label class="flb">Number with country code (e.g. 919566670218)</label>
+            <input class="fi" id="swa" placeholder="919566670218">
+            <small style="color:var(--tx3);font-size:.68rem;margin-top:.3rem;display:block">This is the number customers will message to order</small>
+          </div>
+          <button class="abtn sm" onclick="saveSet()">Save WhatsApp</button>
+        </div>
+        <div class="sc">
+          <h3>🚚 Delivery Settings</h3>
+          <div class="fgg" style="margin-bottom:.9rem;max-width:240px">
+            <label class="flb">Free delivery above (₹)</label>
+            <input class="fi" type="number" id="sdel" placeholder="599">
+          </div>
+          <button class="abtn sm" onclick="saveSet()">Save</button>
+        </div>
+        <div class="sc">
+          <h3>🔐 Change Password</h3>
+          <div style="display:flex;flex-direction:column;gap:.65rem;max-width:290px">
+            <input class="fi" type="password" id="sp1" placeholder="New password">
+            <input class="fi" type="password" id="sp2" placeholder="Confirm password">
+            <button class="abtn sm" onclick="chPass()">Update Password</button>
+          </div>
+        </div>
+        <div class="sc" style="border-color:rgba(192,57,43,.18)">
+          <h3 style="color:var(--red)">⚠ Session</h3>
+          <button class="abtn sm rd" onclick="logOut()">Logout</button>
+        </div>
+      </div>
+    </div><!-- /adsh -->
+  </div><!-- /abox -->
+</div><!-- /aov -->
+
+<script>
+// ── CONFIG & DEFAULTS ──────────────────────────────────
+const WA_DEFAULT = '919566670218'; // Change to your WhatsApp number with country code
+
+const SAMPLE_PLANTS = [
+  {id:'d1',name:'Monstera Deliciosa',desc:'The iconic Swiss cheese plant — bold split leaves, thrives in indirect light. Perfect for living rooms and offices.',price:1299,orig:1799,cat:'Indoor',badge:'Bestseller',emoji:'🌿',imgs:[],on:today()},
+  {id:'d2',name:'Desert Rose Cactus',desc:'Sculptural beauty for sunny windowsills. Extremely low-maintenance — water once a fortnight.',price:799,orig:0,cat:'Succulents',badge:'New Arrival',emoji:'🌵',imgs:[],on:today()},
+  {id:'d3',name:'Peace Lily',desc:'Elegant white blooms with lush foliage. One of the best air-purifying plants for home or office.',price:999,orig:1299,cat:'Flowering',badge:'Bestseller',emoji:'🌸',imgs:[],on:today()},
+  {id:'d4',name:'Snake Plant',desc:'Near-indestructible and stylish. Filters air toxins and thrives in almost any light condition.',price:649,orig:0,cat:'Indoor',badge:'',emoji:'🪴',imgs:[],on:today()},
+  {id:'d5',name:'Aloe Vera',desc:"Nature's medicine cabinet. Soothing gel, gorgeous form, and thrives on neglect.",price:449,orig:0,cat:'Succulents',badge:'',emoji:'🌱',imgs:[],on:today()},
+  {id:'d6',name:'Bougainvillea',desc:'Riot of colour on your balcony or garden. Fast-growing with stunning pink-purple blooms.',price:549,orig:0,cat:'Outdoor',badge:'Limited',emoji:'🌺',imgs:[],on:today()},
+];
+
+function today(){return new Date().toLocaleDateString('en-IN');}
+
+// ── STATE ───────────────────────────────────────────────
+let plants=[], cfg={wa:WA_DEFAULT,pass:'plantopia123',del:599};
+let activeF='All', loggedIn=false, pendImgs=[];
+
+// ── WHATSAPP SVG ────────────────────────────────────────
+const WASV=`<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="currentColor"/></svg>`;
+
+// ── STORAGE ─────────────────────────────────────────────
+function load(){
+  try{
+    const p=localStorage.getItem('pt_p');
+    const c=localStorage.getItem('pt_c');
+    plants = p ? JSON.parse(p) : JSON.parse(JSON.stringify(SAMPLE_PLANTS));
+    if(c) cfg={...cfg,...JSON.parse(c)};
+    if(!cfg.wa) cfg.wa=WA_DEFAULT;
+  }catch(e){plants=JSON.parse(JSON.stringify(SAMPLE_PLANTS));}
+}
+
+function save(){
+  try{
+    localStorage.setItem('pt_p',JSON.stringify(plants));
+    localStorage.setItem('pt_c',JSON.stringify(cfg));
+  }catch(e){
+    const slim=plants.map(p=>({...p,imgs:p.imgs.slice(0,1)}));
+    try{localStorage.setItem('pt_p',JSON.stringify(slim));}catch(e2){}
+    toast('⚠ Storage almost full — use image URLs instead','in');
+  }
+}
+
+// ── WHATSAPP ────────────────────────────────────────────
+function waLink(msg){return 'https://wa.me/'+cfg.wa+'?text='+encodeURIComponent(msg);}
+function ordMsg(p){
+  return `🌿 *Plantopia Order*\n\nHello! I would like to order:\n\n${p.emoji||'🪴'} *${p.name}*\nCategory: ${p.cat}\nPrice: ₹${fmt(p.price)}\n${p.orig?'Original: ₹'+fmt(p.orig)+'\n':''}\nPlease confirm availability and delivery details. Thank you! 🙏`;
+}
+function genMsg(){return `🌿 Hi Plantopia! I'd like to browse your plants and place an order. Please help me! 🌱`;}
+
+function updWa(){
+  const g=waLink(genMsg());
+  ['nwa','hwa','fwa','waf'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.href=g;el.target='_blank';el.rel='noopener';}
+  });
+  const fw2=document.getElementById('fwa2');
+  if(fw2){fw2.href=g;fw2.target='_blank';fw2.rel='noopener';}
+}
+
+// ── FORMAT ──────────────────────────────────────────────
+function fmt(n){return Number(n).toLocaleString('en-IN');}
+
+// ── RENDER SHOP ─────────────────────────────────────────
+function render(){
+  const g=document.getElementById('pg');
+  const list=activeF==='All'?plants:plants.filter(p=>p.cat===activeF);
+  if(!list.length){
+    g.innerHTML=`<div class="empty">
+      <div class="eico">🌱</div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--tx2);margin-bottom:.5rem">
+        ${plants.length===0?'Coming Soon':'No plants in this category yet'}
+      </p>
+      <p style="font-size:.8rem">${plants.length===0?'Our team is hand-picking the finest plants — check back soon!':'Try another category or check back later.'}</p>
+    </div>`;
+    updCounts();return;
+  }
+  g.innerHTML=list.map(p=>{
+    const imgH=p.imgs&&p.imgs.length
+      ?`<img src="${p.imgs[0]}" alt="${p.name}" loading="lazy">`
+      :`<span class="pie">${p.emoji||'🌿'}</span>`;
+    const bc=p.badge==='Bestseller'?'b1':p.badge==='New Arrival'?'b2':p.badge==='Limited'?'b3':p.badge==='Sale'?'b4':'';
+    const bH=p.badge?`<div class="pb ${bc}">${p.badge}</div>`:'';
+    const oH=p.orig&&p.orig>0?`<span class="ppro">₹${fmt(p.orig)}</span>`:'';
+    const wl=waLink(ordMsg(p));
+    return `<div class="pc">
+      <div class="pi">
+        <div class="pglow"></div>
+        ${imgH}${bH}
+      </div>
+      <div class="pinfo">
+        <div class="pnm">${p.name}</div>
+        <div class="pdesc">${p.desc||''}</div>
+        <div class="pft">
+          <div class="ppr">
+            <span class="pprm">₹${fmt(p.price)}</span>
+            ${oH}
+            <span class="pprc">${p.cat}</span>
+          </div>
+          <a class="bwo" href="${wl}" target="_blank" rel="noopener">
+            ${WASV} Order
+          </a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  updCounts();
+}
+
+function updCounts(){
+  ['Indoor','Outdoor','Succulents','Flowering'].forEach(c=>{
+    const el=document.getElementById('ct-'+c);
+    if(el){const n=plants.filter(p=>p.cat===c).length;el.textContent=n+' plant'+(n!==1?'s':'');}
+  });
+}
+
+function setF(f){
+  activeF=f;
+  document.querySelectorAll('.fb').forEach(b=>{
+    const lbl=b.textContent.replace(/[🪴🌳🌵🌸🌿]/g,'').trim();
+    b.classList.toggle('on',lbl===(f==='All'?'All Plants':f));
+  });
+  render();
+}
+
+// ── IMAGE UPLOAD ────────────────────────────────────────
+function handleFiles(files){
+  const avail=5-pendImgs.length;
+  Array.from(files).slice(0,avail).forEach(f=>{
+    if(f.size>5*1024*1024){toast('Image too large — max 5MB','er');return;}
+    const r=new FileReader();
+    r.onload=e=>compress(e.target.result);
+    r.readAsDataURL(f);
+  });
+  document.getElementById('ifi').value='';
+}
+function compress(src){
+  const img=new Image();
+  img.onload=function(){
+    const c=document.createElement('canvas');
+    const MAX=860;let w=img.width,h=img.height;
+    if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+    if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
+    c.width=w;c.height=h;
+    const ctx=c.getContext('2d');
+    ctx.drawImage(img,0,0,w,h);
+    pendImgs.push(c.toDataURL('image/jpeg',0.76));
+    renderPrvs();
+  };
+  img.src=src;
+}
+function renderPrvs(){
+  document.getElementById('ipvs').innerHTML=pendImgs.map((s,i)=>`
+    <div class="ith">
+      <img src="${s}" alt="Preview">
+      ${i===0?'<span class="ithm">Main</span>':''}
+      <button class="ithd" onclick="delImg(${i})">✕</button>
+    </div>`).join('');
+}
+function delImg(i){pendImgs.splice(i,1);renderPrvs();}
+function dOv(e){e.preventDefault();document.getElementById('idr').classList.add('drag');}
+function dLv(){document.getElementById('idr').classList.remove('drag');}
+function dDr(e){e.preventDefault();dLv();handleFiles(e.dataTransfer.files);}
+
+// ── ADMIN ────────────────────────────────────────────────
+function openA(){
+  document.getElementById('aov').classList.add('on');
+  loggedIn?showDash():showLog();
+}
+function closeA(){document.getElementById('aov').classList.remove('on');}
+
+function showLog(){
+  document.getElementById('alog').style.display='block';
+  document.getElementById('adsh').style.display='none';
+  document.getElementById('apass').value='';
+  document.getElementById('aerr').textContent='';
+  setTimeout(()=>document.getElementById('apass').focus(),80);
+}
+function showDash(){
+  document.getElementById('alog').style.display='none';
+  document.getElementById('adsh').style.display='block';
+  document.getElementById('swa').value=cfg.wa||WA_DEFAULT;
+  document.getElementById('sdel').value=cfg.del||599;
+  renderList();
+}
+function doLog(){
+  if(document.getElementById('apass').value===cfg.pass){
+    loggedIn=true;showDash();document.getElementById('aerr').textContent='';
+  }else{document.getElementById('aerr').textContent='❌ Wrong password. Try again.';}
+}
+function logOut(){loggedIn=false;closeA();toast('Logged out','in');}
+
+function gTab(n){
+  document.querySelectorAll('.atab').forEach((t,i)=>t.classList.toggle('on',['add','manage','settings'][i]===n));
+  document.querySelectorAll('.apane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p-'+n).classList.add('on');
+  if(n==='manage')renderList();
+}
+
+// ── SAVE PLANT ───────────────────────────────────────────
+function savePlant(){
+  const nm=document.getElementById('fN').value.trim();
+  const pr=document.getElementById('fP').value;
+  const og=document.getElementById('fO').value||0;
+  const ds=document.getElementById('fD').value.trim();
+  const ct=document.getElementById('fC').value;
+  const bd=document.getElementById('fB').value;
+  const em=document.getElementById('fE').value.trim()||'🌿';
+  const ei=document.getElementById('eid').value;
+
+  if(!nm){toast('Plant name is required','er');return;}
+  if(!pr||isNaN(pr)||Number(pr)<=0){toast('Enter a valid price in ₹','er');return;}
+
+  if(ei){
+    const idx=plants.findIndex(p=>p.id===ei);
+    if(idx>-1){
+      const imgs=pendImgs.length?[...pendImgs]:plants[idx].imgs;
+      plants[idx]={...plants[idx],name:nm,price:+pr,orig:+og,desc:ds||plants[idx].desc,cat:ct,badge:bd,emoji:em,imgs};
+    }
+    document.getElementById('eid').value='';
+    document.getElementById('addB').textContent='Add Plant to Store';
+    toast('Plant updated ✅','ok');
+  }else{
+    plants.unshift({id:'p'+Date.now(),name:nm,price:+pr,orig:+og,
+      desc:ds||'A beautiful plant for your home.',cat:ct,badge:bd,emoji:em,
+      imgs:[...pendImgs],on:today()});
+    toast('🌿 Plant added to store!','ok');
+  }
+  save();render();clearF();gTab('manage');
+}
+
+function clearF(){
+  ['fN','fP','fO','fD'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('fE').value='🌿';
+  document.getElementById('fB').value='Bestseller';
+  document.getElementById('fC').value='Indoor';
+  document.getElementById('eid').value='';
+  document.getElementById('addB').textContent='Add Plant to Store';
+  pendImgs=[];renderPrvs();
+}
+
+function editP(id){
+  const p=plants.find(x=>x.id===id);if(!p)return;
+  gTab('add');
+  document.getElementById('fN').value=p.name;
+  document.getElementById('fP').value=p.price;
+  document.getElementById('fO').value=p.orig||'';
+  document.getElementById('fD').value=p.desc||'';
+  document.getElementById('fC').value=p.cat;
+  document.getElementById('fB').value=p.badge||'';
+  document.getElementById('fE').value=p.emoji||'🌿';
+  document.getElementById('eid').value=p.id;
+  document.getElementById('addB').textContent='Update Plant';
+  pendImgs=[...(p.imgs||[])];renderPrvs();
+}
+
+function delP(id){
+  if(!confirm('Delete this plant?'))return;
+  plants=plants.filter(p=>p.id!==id);
+  save();render();renderList();toast('Plant removed 🗑','in');
+}
+function clearAll(){plants=[];save();render();renderList();toast('All plants cleared','in');}
+
+function renderList(){
+  const el=document.getElementById('pll');
+  const ct=document.getElementById('plct');
+  ct.textContent=plants.length+' plant'+(plants.length!==1?'s':'')+' in store';
+  if(!plants.length){
+    el.innerHTML='<div class="empty"><div class="eico">🌱</div><p>No plants yet — add your first plant from the "Add Plant" tab!</p></div>';
+    return;
+  }
+  el.innerHTML=plants.map(p=>{
+    const th=p.imgs&&p.imgs.length
+      ?`<img src="${p.imgs[0]}" style="width:46px;height:46px;object-fit:cover;border-radius:4px" alt="${p.name}">`
+      :p.emoji||'🌿';
+    return `<div class="pli">
+      <div class="plth">${th}</div>
+      <div class="plinf">
+        <div class="plinm">${p.name}</div>
+        <div class="plmt">${p.cat}${p.badge?' · '+p.badge:''} · Added ${p.on||'—'} · ${p.imgs&&p.imgs.length?p.imgs.length+' photo(s)':'emoji only'}</div>
+      </div>
+      <div class="plpr">₹${fmt(p.price)}</div>
+      <div class="plac">
+        <button class="abtn sm gh" onclick="editP('${p.id}')">Edit</button>
+        <button class="abtn sm rd" onclick="delP('${p.id}')">Del</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function saveSet(){
+  const wa=document.getElementById('swa').value.replace(/\D/g,'');
+  if(wa.length<10){toast('Enter a valid WhatsApp number','er');return;}
+  cfg.wa=wa;
+  cfg.del=Number(document.getElementById('sdel').value)||599;
+  save();updWa();render();toast('Settings saved ✅','ok');
+}
+
+function chPass(){
+  const p1=document.getElementById('sp1').value;
+  const p2=document.getElementById('sp2').value;
+  if(!p1){toast('Enter a new password','er');return;}
+  if(p1!==p2){toast('Passwords do not match','er');return;}
+  cfg.pass=p1;save();
+  document.getElementById('sp1').value='';
+  document.getElementById('sp2').value='';
+  toast('Password changed 🔐','ok');
+}
+
+// ── TOAST ───────────────────────────────────────────────
+let tT;
+function toast(msg,type='in'){
+  const el=document.getElementById('tst');
+  el.textContent=msg;el.className='tst on '+type;
+  clearTimeout(tT);tT=setTimeout(()=>el.className='tst',3500);
+}
+
+// ── PARTICLES ───────────────────────────────────────────
+(function(){
+  const c=document.getElementById('pts');
+  for(let i=0;i<24;i++){
+    const el=document.createElement('div');el.className='pt';
+    el.style.left=Math.random()*100+'%';el.style.top=Math.random()*100+'%';
+    el.style.setProperty('--d',(5+Math.random()*9)+'s');
+    el.style.setProperty('--dl',(Math.random()*7)+'s');
+    c.appendChild(el);
+  }
+})();
+
+// ── MOBILE MENU ─────────────────────────────────────────
+function togMob(){document.getElementById('mobm').classList.toggle('on');}
+function cMob(){document.getElementById('mobm').classList.remove('on');}
+
+// ── CLOSE ADMIN ON OVERLAY CLICK ─────────────────────────
+document.getElementById('aov').addEventListener('click',function(e){
+  if(e.target===this)closeA();
+});
+
+// ── INIT ────────────────────────────────────────────────
+load();render();updWa();
+</script>
+</body>
+</html>
